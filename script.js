@@ -1,3 +1,11 @@
+function popover() {
+  const popoverTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="popover"]'
+  );
+  const popoverList = [...popoverTriggerList].map(
+    (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
+  );
+}
 function all() {
   let nextTime = document.getElementById("nex-prayer-time");
   let nextName = document.getElementById("nex-prayer-name");
@@ -171,22 +179,19 @@ function all() {
     todayBtn.classList.add("border", "border-secondary");
     tommBtn.classList.remove("border", "border-secondary");
     prayersEle.innerHTML = allPrayerMaker(obj);
+    popover();
   };
 
   tommBtn.onclick = () => {
     todayBtn.classList.remove("border", "border-secondary");
     tommBtn.classList.add("border", "border-secondary");
     prayersEle.innerHTML = allPrayerMaker(objTomm);
+    popover();
   };
   if ((nextTime.innerHTML = "All Done")) {
     tommBtn.click();
   }
-  const popoverTriggerList = document.querySelectorAll(
-    '[data-bs-toggle="popover"]'
-  );
-  const popoverList = [...popoverTriggerList].map(
-    (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
-  );
+  popover();
 }
 all();
 
