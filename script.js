@@ -2,6 +2,8 @@ function all() {
   let nextTime = document.getElementById("nex-prayer-time");
   let nextName = document.getElementById("nex-prayer-name");
   let nextLeft = document.getElementById("nex-prayer-left");
+  let todayBtn = document.getElementById("today");
+  let tommBtn = document.getElementById("tomm");
 
   function timeConvert(n) {
     var num = n;
@@ -28,6 +30,7 @@ function all() {
     k = time.split(":");
     k.pop();
     realTime = parseInt(k.join(""));
+
     timeMin = k;
     timeMin[0] *= 60;
     realTimeMin = parseInt(timeMin[0]) + parseInt(timeMin[1]);
@@ -81,29 +84,32 @@ function all() {
     Fajr: "30min",
     Dhuhr: "15min",
     Ashar: "15min",
-    Maghrib: "10min",
-    Ishaa: "20min",
+    Maghrib: "7min",
+    Ishaa: "10min",
   };
   let prayersEle = document.getElementById("all-prayers");
-  let finalHtml = "";
-  for (let j = obj.length - 2; j >= 0; j--) {
-    e = obj[j];
-    finalHtml += ` <div class="row py-2">
+  function allPrayerMaker(obj) {
+    let finalHtml = "";
+    for (let j = obj.length - 2; j >= 0; j--) {
+      e = obj[j];
+      finalHtml += ` <div class="row py-2">
             <div class="col-2 opacity-50">
               <img src="images/${e[0].toLowerCase()}.png" alt="" />
             </div>
             <div class="col-8 poppins">${
               e[0]
             } <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="${
-      nimazTime[e[0]]
-    } gap">
+        nimazTime[e[0]]
+      } gap">
   <button class=" rounded-5 p-0 border d-flex justify-content-center align-items-center text-center" style="height:15px;width:15px;font-size:10px;" type="button" >i</button>
 </span></div>
             <div class="col-2 text-center kanit">${e[1]}</div>
           </div>`;
+    }
+    return finalHtml;
   }
 
-  prayersEle.innerHTML = finalHtml;
+  prayersEle.innerHTML = allPrayerMaker(obj);
 
   let dayEle = document.getElementById("day");
   let day;
@@ -163,6 +169,24 @@ function all() {
   const popoverList = [...popoverTriggerList].map(
     (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
   );
+
+  let tommorowObj = data[0].prayers[date];
+  let objTomm = Object.entries(tommorowObj);
+
+  todayBtn.onclick = () => {
+    todayBtn.classList.add("border", "border-secondary");
+    tommBtn.classList.remove("border", "border-secondary");
+    prayersEle.innerHTML = allPrayerMaker(obj);
+  };
+
+  tommBtn.onclick = () => {
+    todayBtn.classList.remove("border", "border-secondary");
+    tommBtn.classList.add("border", "border-secondary");
+    prayersEle.innerHTML = allPrayerMaker(objTomm);
+  };
+  if ((nextTime.innerHTML = "All Done")) {
+    tommBtn.click();
+  }
 }
 all();
 
