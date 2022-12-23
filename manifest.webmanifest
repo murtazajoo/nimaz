@@ -2,8 +2,8 @@
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
     "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
+    "scope": "/nimaz",
+    "start_url": "/nimaz",
     "name": "Nimaz",
     "short_name": "Nimaz",
     "icons": [
