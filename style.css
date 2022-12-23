@@ -1,0 +1,56 @@
+@import url("https://fonts.googleapis.com/css2?family=Kanit&family=Poppins:wght@300&family=Roboto:wght@300&display=swap");
+
+:root {
+  --font-kanit: "Kanit", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+}
+.kanit {
+  font-family: var(--font-kanit) !important;
+}
+.poppins {
+  font-family: var(--font-poppins) !important;
+}
+.roboto {
+  font-family: var(--font-roboto) !important;
+}
+
+body {
+  background-color: rgba(51, 51, 51, 0.616);
+  margin: 0 auto;
+  max-width: 450px;
+  /* height: 100vh !important; */
+  width: 100% !important;
+  /* overflow: hidden !important; */
+  background-image: url(https://source.unsplash.com/random/1600x900?masjid);
+  background-position: center;
+  background-size: cover;
+  background-blend-mode: multiply;
+  color: #fff;
+}
+.navbar {
+  height: 10vh !important;
+}
+.navbar-brand {
+  font-family: var(--font-kanit) !important;
+}
+main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* height: 89vh; */
+}
+main > div {
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background-color: rgba(255, 255, 255, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+  color: #333;
+  border-radius: 20px;
+  width: 90%;
+  margin: 0 auto;
+  /* height: 80vh !important; */
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
