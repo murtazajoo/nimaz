@@ -163,12 +163,6 @@ function all() {
 
   let islamicDate = document.getElementById("islamic-date");
   islamicDate.innerHTML = `${hijriYear}/${hijriMonth}/${hijriDay}`;
-  const popoverTriggerList = document.querySelectorAll(
-    '[data-bs-toggle="popover"]'
-  );
-  const popoverList = [...popoverTriggerList].map(
-    (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
-  );
 
   let tommorowObj = data[0].prayers[date];
   let objTomm = Object.entries(tommorowObj);
@@ -187,6 +181,12 @@ function all() {
   if ((nextTime.innerHTML = "All Done")) {
     tommBtn.click();
   }
+  const popoverTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="popover"]'
+  );
+  const popoverList = [...popoverTriggerList].map(
+    (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
+  );
 }
 all();
 
