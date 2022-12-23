@@ -12,7 +12,7 @@ function all() {
   let nextLeft = document.getElementById("nex-prayer-left");
   let todayBtn = document.getElementById("today");
   let tommBtn = document.getElementById("tomm");
-
+  let t;
   function timeConvert(n) {
     var num = n;
     var hours = num / 60;
@@ -48,12 +48,16 @@ function all() {
   }
   values();
 
+  let tommorowObj = data[0].prayers[date];
+  let objTomm = Object.entries(tommorowObj);
+
   function timeLeft(l) {
     nextPrayerTime = l.split(":");
     nextPrayerTime[0] *= 60;
     nextPrayerTime = parseInt(nextPrayerTime[0]) + parseInt(nextPrayerTime[1]);
     nextLeft.innerHTML = timeConvert(nextPrayerTime - realTimeMin);
   }
+
   if (ap == "PM") {
     for (let i = 0; i < obj.length - 3; i++) {
       let last = i > 1 ? 0 : parseInt(obj[i + 1][1].replace(":", ""));
@@ -72,9 +76,9 @@ function all() {
         nextName.innerHTML = "Dhuhr";
         timeLeft(objAll.Dhuhr);
       } else {
-        nextTime.innerHTML = "All Done";
-        nextName.innerHTML = "All Done";
-        nextLeft.innerHTML = "0hr 00min";
+        t = true;
+        nextTime.innerHTML = tommorowObj.Fajr;
+        document.getElementById("tommorrow-left").innerHTML = "Tommorrow Fajr";
       }
     }
   } else if (ap == "AM") {
@@ -172,9 +176,6 @@ function all() {
   let islamicDate = document.getElementById("islamic-date");
   islamicDate.innerHTML = `${hijriYear}/${hijriMonth}/${hijriDay}`;
 
-  let tommorowObj = data[0].prayers[date];
-  let objTomm = Object.entries(tommorowObj);
-
   todayBtn.onclick = () => {
     todayBtn.classList.add("border", "border-secondary");
     tommBtn.classList.remove("border", "border-secondary");
@@ -188,7 +189,7 @@ function all() {
     prayersEle.innerHTML = allPrayerMaker(objTomm);
     popover();
   };
-  if ((nextTime.innerHTML = "All Done")) {
+  if (t) {
     tommBtn.click();
   }
   popover();
