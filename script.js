@@ -53,7 +53,6 @@ function all() {
       prayerTimeMin = timeToMin(prayer[1]);
       lowerPrayer = todayPrayerArr[i + 1][1];
       lowerPrayerTimeMin = timeToMin(lowerPrayer); // prayer below the selected prayer
-      console.log(i, prayer[1].split(":")[0], count);
 
       if (
         (shortLocalTime.split(":")[0] === "12" && i == count) ||
@@ -70,7 +69,6 @@ function all() {
         if (prayer[1].split(":")[0] === "12" && i === count) {
           continue;
         } else {
-          console.log("22");
           nextPrayerArr = prayer;
         }
         break;
@@ -89,8 +87,6 @@ function all() {
       nextPrayerArr = todayPrayerArr[3];
     }
   }
-
-  console.log(nextPrayerArr);
 
   function render(arr) {
     let eleNextPrayer = document.getElementById("nex-prayer-time");
@@ -234,11 +230,6 @@ window.addEventListener("beforeinstallprompt", (e) => {
     deferredPrompt.prompt();
     // Wait for the user to respond to the prompt
     deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-      } else {
-        console.log("User dismissed the A2HS prompt");
-      }
       deferredPrompt = null;
     });
   });
