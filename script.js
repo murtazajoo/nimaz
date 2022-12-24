@@ -1,96 +1,114 @@
-function popover() {
-  const popoverTriggerList = document.querySelectorAll(
-    '[data-bs-toggle="popover"]'
-  );
-  const popoverList = [...popoverTriggerList].map(
-    (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
-  );
-}
 function all() {
-  let nextTime = document.getElementById("nex-prayer-time");
-  let nextName = document.getElementById("nex-prayer-name");
-  let nextLeft = document.getElementById("nex-prayer-left");
-  let todayBtn = document.getElementById("today");
-  let tommBtn = document.getElementById("tomm");
-  let t;
-  function timeConvert(n) {
-    var num = n;
-    var hours = num / 60;
-    var rhours = Math.floor(hours);
-    var minutes = (hours - rhours) * 60;
-    var rminutes = Math.round(minutes);
+  //some functions
+  function timeToMin(time) {
+    //time format = 12:12
+    givenHours = time.split(":")[0] * 60;
+    givenMin = time.split(":")[1];
+    return parseInt(givenHours) + parseInt(givenMin);
+  }
+  function minToTime(min) {
+    num = min;
+    hours = num / 60;
+    rhours = Math.floor(hours);
+    minutes = (hours - rhours) * 60;
+    rminutes = Math.round(minutes);
     return rhours + " hr(s)  " + rminutes + " min(s)";
   }
-  let dateAndTime,
-    date,
-    time,
-    k,
-    timeMin,
-    realTimeMin,
-    ap,
-    realTime,
-    objAll,
-    obj;
-  function values() {
-    dateAndTime = new Date();
-    date = dateAndTime.getDate();
-    time = dateAndTime.toLocaleTimeString();
-    k = time.split(":");
-    k.pop();
-    realTime = parseInt(k.join(""));
-
-    timeMin = k;
-    timeMin[0] *= 60;
-    realTimeMin = parseInt(timeMin[0]) + parseInt(timeMin[1]);
-    ap = time.split(" ")[1];
-    objAll = data[0].prayers[date - 1];
-    obj = Object.entries(objAll);
-  }
-  values();
-
-  let tommorowObj = data[0].prayers[date];
-  let objTomm = Object.entries(tommorowObj);
-
-  function timeLeft(l) {
-    nextPrayerTime = l.split(":");
-    nextPrayerTime[0] *= 60;
-    nextPrayerTime = parseInt(nextPrayerTime[0]) + parseInt(nextPrayerTime[1]);
-    nextLeft.innerHTML = timeConvert(nextPrayerTime - realTimeMin);
+  function popover() {
+    const popoverTriggerList = document.querySelectorAll(
+      '[data-bs-toggle="popover"]'
+    );
+    const popoverList = [...popoverTriggerList].map(
+      (popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl)
+    );
   }
 
-  if (ap == "PM") {
-    for (let i = 0; i < obj.length - 3; i++) {
-      let last = i > 1 ? 0 : parseInt(obj[i + 1][1].replace(":", ""));
-      if (parseInt(obj[i][1].replace(":", "")) > realTime && last < realTime) {
-        nextTime.innerHTML = obj[i][1];
-        nextName.innerHTML = obj[i][0];
+  let dateTime,
+    dateToday,
+    todayPrayerObj,
+    todayPrayerArr,
+    localTime,
+    shortLocalTime,
+    localTimeMin,
+    meridiem,
+    helper;
+  // setting values to variables
+  dateTime = new Date();
+  dateToday = dateTime.getDate();
+  localTime = dateTime.toLocaleTimeString();
+  // localTime = "3:30:46 PM"; //manual
+  helper = localTime.split(" ")[0].split(":");
+  helper.pop();
+  shortLocalTime = helper.join(":");
+  meridiem = localTime.split(" ")[1];
+  todayPrayerObj = data[0].prayers[dateToday - 1];
+  todayPrayerArr = Object.entries(todayPrayerObj);
+  localTimeMin = timeToMin(shortLocalTime);
+  let nextPrayerArr = [];
 
-        timeLeft(obj[i][1]);
-        break;
-      }
+  if (meridiem === "PM") {
+    count = todayPrayerArr.length - 3;
+    for (i = count; i >= 0; i--) {
+      prayer = todayPrayerArr[i]; //array of the prayer name and time
+      prayerTimeMin = timeToMin(prayer[1]);
+      lowerPrayer = todayPrayerArr[i + 1][1];
+      lowerPrayerTimeMin = timeToMin(lowerPrayer); // prayer below the selected prayer
+      console.log(i, prayer[1].split(":")[0], count);
+
       if (
-        parseInt(realTime.toString().slice(0, -2)) > 12
-        // parseInt(objAll.Dhuhr.replace(":", "")) > realTime
+        (shortLocalTime.split(":")[0] === "12" && i == count) ||
+        (lowerPrayer.split(":")[0] === "12" && i == 1)
       ) {
-        nextTime.innerHTML = objAll.Dhuhr;
-        nextName.innerHTML = "Dhuhr";
-        timeLeft(objAll.Dhuhr);
-      } else {
-        t = true;
-        nextTime.innerHTML = tommorowObj.Fajr;
-        document.getElementById("tommorrow-left").innerHTML = "Tommorrow Fajr";
+        if (prayerTimeMin > localTimeMin && lowerPrayerTimeMin < localTimeMin) {
+          nextPrayerArr = prayer;
+        } else {
+          nextPrayerArr = todayPrayerArr[2];
+        }
+
+        break;
+      } else if (prayerTimeMin > localTimeMin) {
+        if (prayer[1].split(":")[0] === "12" && i === count) {
+          continue;
+        } else {
+          console.log("22");
+          nextPrayerArr = prayer;
+        }
+        break;
+      } else if (i === 0) {
+        nextPrayerArr = ["tommorow"];
       }
     }
-  } else if (ap == "AM") {
-    if (parseInt(objAll.Fajr.replace(":", "")) > realTime) {
-      nextTime.innerHTML = objAll.Fajr;
-      nextName.innerHTML = "Fajr";
-      timeLeft(objAll.Fajr);
+  }
+  if (meridiem === "AM") {
+    if (
+      shortLocalTime.split(":")[0] === "12" ||
+      localTimeMin < timeToMin(todayPrayerObj.Fajr)
+    ) {
+      nextPrayerArr = todayPrayerArr[4];
     } else {
-      nextTime.innerHTML = objAll.Dhuhr;
-      nextName.innerHTML = "Dhuhr";
-      timeLeft(objAll.Dhuhr);
+      nextPrayerArr = todayPrayerArr[3];
     }
+  }
+
+  console.log(nextPrayerArr);
+
+  function render(arr) {
+    let eleNextPrayer = document.getElementById("nex-prayer-time");
+    let eleMessage = document.getElementById("message");
+    if (arr[0] == "tommorow") {
+      eleNextPrayer.innerHTML = "All Done";
+      eleMessage.innerHTML = "all prayers prayed today";
+      tommBtn.click();
+      return;
+    }
+    nextPrayerName = arr[0];
+    nextPrayerTime = arr[1];
+    message =
+      minToTime(timeToMin(nextPrayerTime) - localTimeMin) +
+      " left until " +
+      nextPrayerName;
+    eleNextPrayer.innerHTML = nextPrayerTime;
+    eleMessage.innerHTML = message;
   }
   let nimazTime = {
     Fajr: "30min",
@@ -121,7 +139,25 @@ function all() {
     return finalHtml;
   }
 
-  prayersEle.innerHTML = allPrayerMaker(obj);
+  prayersEle.innerHTML = allPrayerMaker(todayPrayerArr);
+  popover();
+  let todayBtn = document.getElementById("today");
+  let tommBtn = document.getElementById("tomm");
+  let tommorowPrayerArr = Object.entries(data[0].prayers[dateToday]);
+  todayBtn.onclick = () => {
+    todayBtn.classList.add("border", "border-secondary");
+    tommBtn.classList.remove("border", "border-secondary");
+    prayersEle.innerHTML = allPrayerMaker(todayPrayerArr);
+    popover();
+  };
+
+  tommBtn.onclick = () => {
+    todayBtn.classList.remove("border", "border-secondary");
+    tommBtn.classList.add("border", "border-secondary");
+    prayersEle.innerHTML = allPrayerMaker(tommorowPrayerArr);
+    popover();
+  };
+  render(nextPrayerArr);
 
   let dayEle = document.getElementById("day");
   let day;
@@ -153,11 +189,11 @@ function all() {
   let dateEle = document.getElementById("date");
 
   dateEle.innerHTML =
-    dateAndTime.getDate() +
+    dateTime.getDate() +
     "/" +
-    dateAndTime.getMonth() +
+    dateTime.getMonth() +
     "/" +
-    dateAndTime.getFullYear();
+    dateTime.getFullYear();
 
   var now = new Date();
   var dayOfYear = Math.floor(
@@ -175,45 +211,25 @@ function all() {
 
   let islamicDate = document.getElementById("islamic-date");
   islamicDate.innerHTML = `${hijriYear}/${hijriMonth}/${hijriDay}`;
-
-  todayBtn.onclick = () => {
-    todayBtn.classList.add("border", "border-secondary");
-    tommBtn.classList.remove("border", "border-secondary");
-    prayersEle.innerHTML = allPrayerMaker(obj);
-    popover();
-  };
-
-  tommBtn.onclick = () => {
-    todayBtn.classList.remove("border", "border-secondary");
-    tommBtn.classList.add("border", "border-secondary");
-    prayersEle.innerHTML = allPrayerMaker(objTomm);
-    popover();
-  };
-  if (t) {
-    tommBtn.click();
-  }
-  popover();
 }
 all();
-
 setInterval(() => {
   all();
-}, 30000);
-
+}, 15000);
 let deferredPrompt;
 const addBtn = document.querySelector(".add-button");
-addBtn.style.display = "none";
+addBtn.style.visibility = "hidden";
 window.addEventListener("beforeinstallprompt", (e) => {
   // Prevent Chrome 67 and earlier from automatically showing the prompt
   e.preventDefault();
   // Stash the event so it can be triggered later.
   deferredPrompt = e;
   // Update UI to notify the user they can add to home screen
-  addBtn.style.display = "block";
+  addBtn.style.visibility = "visible";
 
   addBtn.addEventListener("click", (e) => {
     // hide our user interface that shows our A2HS button
-    addBtn.style.display = "none";
+    addBtn.style.visibility = "hidden";
     // Show the prompt
     deferredPrompt.prompt();
     // Wait for the user to respond to the prompt

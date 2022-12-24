@@ -197,7 +197,7 @@ let data = [
       {
         Ishaa: "6:58",
         Maghrib: "5:28",
-        Ashar: "3:09",
+        Ashar: "3:10",
         Dhuhr: "12:31",
         Fajr: "6:06",
         Date: 25,
